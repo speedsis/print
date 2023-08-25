@@ -13,7 +13,7 @@ export default async function handler(
     // });
 
     var port = new SerialPort("COM4", {
-      baudRate: 2400,
+      baudRate: 115200,
       dataBits: 8,
       parity: "none",
     });
