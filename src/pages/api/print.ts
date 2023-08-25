@@ -1,21 +1,31 @@
 // pages/api/print.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import SerialPort from "serialport";
+const parsers = SerialPort.parsers;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const port = new SerialPort("COM4", { baudRate: 9600 });
+    const port = new SerialPort("COM4", {
+      baudRate: 115200,
+    });
 
     const commands = [
       0x1b, 0x40, 0x1b, 0x61, 0x01, 0x1d, 0x21, 0x11, 0x42, 0x42, 0x42, 0x0a,
       0x1b, 0x64, 0x02,
     ];
 
+    // Use a `\r\n` as a line terminator
+    const parser = new parsers.Readline({
+      delimiter: "\r\n",
+    });
+
     // Dados a serem enviados para a impressora
     const cupomFiscal = "Seu cupom fiscal aqui...\n";
+
+    port.pipe(parser);
 
     // Abrir a porta serial e enviar os dados
     port.on("open", () => {
