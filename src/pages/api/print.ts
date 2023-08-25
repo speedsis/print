@@ -8,41 +8,51 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const port = new SerialPort("COM4", {
-      baudRate: 115200,
+    // const port = new SerialPort("COM4", {
+    //   baudRate: 115200,
+    // });
+
+    var port = new SerialPort("COM4", {
+      baudRate: 2400,
+      dataBits: 8,
+      parity: "none",
     });
 
     const commands = [
       0x1b, 0x40, 0x1b, 0x61, 0x01, 0x1d, 0x21, 0x11, 0x42, 0x42, 0x42, 0x0a,
       0x1b, 0x64, 0x02,
     ];
+    const buff = Buffer.from(commands);
 
-    // Use a `\r\n` as a line terminator
-    const parser = new parsers.Readline({
-      delimiter: "\r\n",
+    port.write(buff, function (err) {
+      if (err) {
+        return console.log("Error on write: ", err.message);
+      }
+      console.log("message written");
+    });
+    var response = "";
+    port.on("data", (line) => {
+      response = response.concat(line.toString());
     });
 
-    // Dados a serem enviados para a impressora
-    const cupomFiscal = "Seu cupom fiscal aqui...\n";
+    // port.pipe(parser);
 
-    port.pipe(parser);
+    // // Abrir a porta serial e enviar os dados
+    // port.on("open", () => {
+    //   console.log("Porta COM4 aberta");
+    //   port.write(cupomFiscal, (err) => {
+    //     if (err) {
+    //       return console.log("Erro ao enviar dados:", err.message);
+    //     }
+    //     console.log("Dados enviados com sucesso");
+    //     port.close(); // Fechar a porta após enviar os dados
+    //   });
+    // });
 
-    // Abrir a porta serial e enviar os dados
-    port.on("open", () => {
-      console.log("Porta COM4 aberta");
-      port.write(cupomFiscal, (err) => {
-        if (err) {
-          return console.log("Erro ao enviar dados:", err.message);
-        }
-        console.log("Dados enviados com sucesso");
-        port.close(); // Fechar a porta após enviar os dados
-      });
-    });
-
-    // Lidar com erros na abertura da porta
-    port.on("error", (err) => {
-      console.error("Erro ao abrir a porta COM4:", err.message);
-    });
+    // // Lidar com erros na abertura da porta
+    // port.on("error", (err) => {
+    //   console.error("Erro ao abrir a porta COM4:", err.message);
+    // });
 
     // port.on("open", () => {
     //   console.log("Conexão com a porta COM4 estabelecida.");
