@@ -21,27 +21,27 @@ const PrintPage: NextPage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchPorts = async () => {
-      try {
-        const response = await axios.get('/api/list-ports');
-        setPorts(response.data);
-      } catch (error) {
-        console.error('Erro ao obter lista de portas seriais:', error);
-      }
-    };
-    fetchPorts();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPorts = async () => {
+  //     try {
+  //       const response = await axios.get('/api/list-ports');
+  //       setPorts(response.data);
+  //     } catch (error) {
+  //       console.error('Erro ao obter lista de portas seriais:', error);
+  //     }
+  //   };
+  //   fetchPorts();
+  // }, []);
 
   return (
     <div>
     <div>
       <h2>Portas Seriais Disponíveis:</h2>
-      {/* <ul>
+      <ul>
           {ports.map((port) => (
-            <li key={port.path}>{port.path}</li>
+            <li key={port}>{port}</li>
           ))}
-        </ul> */}
+        </ul>
     </div>
     <button onClick={handlePrint} disabled={printing}>
       Imprimir Cupom
