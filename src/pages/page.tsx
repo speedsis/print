@@ -11,6 +11,9 @@ const PrintPage: NextPage = () => {
     try {
       setPrinting(true);
       const response = await axios.post('/api/print');
+
+      console.log('resposta!', response);
+
       if (response.data.success) {
         console.log('Cupom impresso com sucesso!');
       }
